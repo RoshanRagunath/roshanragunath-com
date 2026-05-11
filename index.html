@@ -749,7 +749,7 @@
     <h2 class="section-title reveal">Let's build something.</h2>
     <div class="contact-inner">
 
-      <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <form class="contact-form reveal" novalidate onsubmit="handleSubmit(event)">
         <div class="form-group">
           <label>Name</label>
           <input type="text" name="name" placeholder="Your name" required />
@@ -763,7 +763,7 @@
           <textarea name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
         </div>
         <button type="submit" class="btn-primary" style="align-self: flex-start;">Send message →</button>
-        <p class="form-status" id="form-status"></p>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
 
       <div class="contact-info reveal">
@@ -804,7 +804,7 @@
     }, { threshold: 0.1 })
     reveals.forEach(el => observer.observe(el))
 
-    const CONTACT_WEBHOOK = 'https://n8n.roshanragunath.com/webhook-test/roshanragunath-contact'
+    const CONTACT_WEBHOOK = 'https://n8n.roshanragunath.com/webhook/roshanragunath-contact'
 
     async function handleSubmit(e) {
       e.preventDefault()
@@ -812,6 +812,12 @@
       const status = document.getElementById('form-status')
       const btn = form.querySelector('button')
       const data = Object.fromEntries(new FormData(form).entries())
+
+      if (!form.checkValidity()) {
+        status.style.color = '#f87171'
+        status.textContent = 'Please fill in all fields with a valid email.'
+        return
+      }
 
       btn.textContent = 'Sending…'
       btn.style.opacity = '0.6'
